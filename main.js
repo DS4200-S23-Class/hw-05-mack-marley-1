@@ -1,3 +1,24 @@
+const FRAME_HEIGHT = 400;
+const FRAME_WIDTH = 400;
+
+const FRAME1 = d3
+  .select("#vis1")
+  .append("svg")
+  .attr("height", FRAME_HEIGHT)
+  .attr("width", FRAME_WIDTH)
+  .attr("class", "frame1");
+
+
+const FRAME2 = d3
+  .select("#vis2")
+  .append("svg")
+  .attr("height", FRAME_HEIGHT)
+  .attr("width", FRAME_WIDTH)
+  .attr("class", "frame2");
+
+
+/**
+
 function pointClicked(pointID) {
     console.log("point was clicked.");
 
@@ -66,7 +87,7 @@ function build_interactive_plot(){
 
 build_interactive_plot();
 
-
+*/
 
 
 

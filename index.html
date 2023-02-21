@@ -5,6 +5,7 @@
     <meta charset=utf-8/>
     <title>hw-05</title>
     <link rel="stylesheet" href="style.css"/>
+    <script src="js/d3.v6.1.1/d3.min.js"></script>
 </head>
 
 
@@ -14,11 +15,8 @@
     </h1>
     <div class="flex-row">
         <div class="flex-column" id="left-column">
-            <svg id="scatterplot" width="400" height="400">
-                <line class="border" x1="0" y1="400" x2="400" y2="400"/>
-                <line class="border" x1="0" y1="0" x2="0" y2="400"/>
-            </svg>
-
+            <div id ="vis1"> </div>
+            <div id ="vis2"> </div>
         </div>
         <div class="flex-column" id="right-column">
             <div id="last-point-clicked">

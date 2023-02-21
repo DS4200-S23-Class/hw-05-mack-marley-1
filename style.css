@@ -24,11 +24,11 @@ body {
 }
 
 #left-column {
-	width: 60%;
+	flex: 60%;
 }
 
 #right-column {
-	width: 40%;
+	flex: 40%;
 }
 
 circle {
@@ -53,4 +53,9 @@ circle {
   border-width: 2px;
   border-radius: 5px;
   padding: 5px;
+}
+
+.frame1, .frame2 {
+  border-left: 3px solid black;
+  border-bottom: 3px solid black;
 }
