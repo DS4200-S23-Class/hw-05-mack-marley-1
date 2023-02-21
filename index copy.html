@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html> 
+
+<head>
+    <meta charset=utf-8/>
+    <title>hw-04</title>
+    <link rel="stylesheet" href="style.css"/>
+</head>
+
+
+<body>
+    <h1 class="centered">
+        hw-04: Event Handling
+    </h1>
+    <div class="flex-row">
+        <div class="flex-column" id="left-column">
+            <svg id="scatterplot" width="400" height="400">
+                <line class="border" x1="0" y1="400" x2="400" y2="400"/>
+                <line class="border" x1="0" y1="0" x2="0" y2="400"/>
+                <circle id="(1, 2)" class = "point" cx="40" cy="320" r="10" onclick="pointClicked('(1, 2)')" onmouseover="pointHovered('(1, 2)')" onmouseout="pointHovered('(1, 2)')"/>
+                <circle id="(2, 4)" class = "point" cx="80" cy="240" r="10" onclick="pointClicked('(2, 4)')" onmouseover="pointHovered('(2, 4)')" onmouseout="pointHovered('(2, 4)')"/>
+                <circle id="(6, 2)" class = "point" cx="240" cy="320" r="10" onclick="pointClicked('(6, 2)')" onmouseover="pointHovered('(6, 2)')" onmouseout="pointHovered('(6, 2)')"/>
+                <circle id="(9, 9)" class = "point" cx="360" cy="40" r="10" onclick="pointClicked('(9, 9)')" onmouseover="pointHovered('(9, 9)')" onmouseout="pointHovered('(9, 9)')"/>
+            </svg>
+
+        </div>
+        <div class="flex-column" id="right-column">
+            <div id="last-point-clicked">
+                No point clicked.
+            </div>
+            <p> Select the X-Coordinate for the new point: 
+                <select id="select-x-coord">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                    <option>7</option>
+                    <option>8</option>
+                    <option>9</option>
+                </select>
+                <br>
+                <br>
+                Select the Y-Coordinate for the new point: 
+                <select id="select-y-coord">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                    <option>7</option>
+                    <option>8</option>
+                    <option>9</option>
+                </select>
+            </p>
+            <button type="button" id="add-point-button" onclick="newPointSubmission()">
+            Add point
+            </button>
+        </div>
+    </div>
+
+    <div id="acknowledgments">
+        <h2 class="centered">ACKNOWLEDGEMENTS</h2>
+        <ul>
+            <li>https://www.w3schools.com/html/default.asp</li>
+            <li>https://www.digitalocean.com/community/tutorials/how-to-work-with-strings-in-javascript</li>
+            <li>https://www.w3schools.com/howto/howto_js_toggle_class.asp</li>
+            <li>https://www.w3schools.com/jsref/prop_html_innerhtml.asp</li>
+        </ul>
+    </div>
+
+
+<script src="main.js"></script>
+</body>
+
+</html>

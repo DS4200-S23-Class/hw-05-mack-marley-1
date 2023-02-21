@@ -1,0 +1,47 @@
+body {
+	font-family: Arial;
+	width: 100%;
+}
+
+.centered {
+	text-align: center;
+}
+
+.flex-row {
+	display: flex;
+	flex-direction: row;
+
+}
+
+.flex-column {
+	display: flex;
+	flex-direction: column;
+}
+
+.border {
+	stroke: black;
+	stroke-width: 10;
+}
+
+#left-column {
+	width: 60%;
+}
+
+#right-column {
+	width: 40%;
+}
+
+circle {
+	fill: darkred;
+	stroke: white;
+	stroke-width: 2;
+}
+.hovered {
+	fill: white;
+	stroke: darkred;
+}
+
+.clicked {
+	stroke: blueviolet;
+	stroke-width: 3;
+}
