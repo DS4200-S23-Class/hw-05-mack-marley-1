@@ -1,3 +1,4 @@
+//constants for vis1 and vis2
 const FRAME_HEIGHT = 400;
 const FRAME_WIDTH = 400;
 const MARGINS = {left: 30, right: 30, top: 30, bottom: 30};
@@ -11,7 +12,6 @@ const FRAME1 = d3
   .attr("width", FRAME_WIDTH)
   .attr("class", "frame1");
 
-
 const FRAME2 = d3
   .select("#vis2")
   .append("svg")
@@ -19,14 +19,13 @@ const FRAME2 = d3
   .attr("width", FRAME_WIDTH)
   .attr("class", "frame2");
 
-
-
-
-
-
+//builds the plots
 function build_interactive_plot(){
 
+    //accesses scatter data from csv
     d3.csv("data/scatter-data.csv").then((data) => {
+    
+    //scales
     const MAX_X = d3.max(data, (d) => { return parseInt(d.x); });
     const MAX_Y = d3.max(data, (d) => { return parseInt(d.y); });
 
@@ -40,24 +39,23 @@ function build_interactive_plot(){
 
     let sourceNames = [];
 
-      function handleMouseover(event, d) { 
-            event.target.style.fill = "orange";    
+
+    function handleMouseover(event, d) { 
+        event.target.style.fill = "orange";    
+        }; 
+
+    function handleMouseleave(event, d) { 
+        event.target.style.fill = "darkred";   
+        }; 
+
+    function handleClick(event, d) { 
+        if (event.target.style.stroke === "lightblue") { 
+            event.target.style.stroke = "";}   
+        else { 
+            event.target.style.stroke = "lightblue"; 
+            event.target.style.strokeWidth = "3px"; 
+            } 
             }; 
-
-        function handleMouseleave(event, d) { 
-            event.target.style.fill = "darkred";   
-            }; 
-
-  
-
-        function handleClick(event, d) { 
-            if (event.target.style.stroke === "lightblue") { 
-                event.target.style.stroke = ""; 
-                } else { 
-                  event.target.style.stroke = "lightblue"; 
-                  event.target.style.strokeWidth = "3px"; 
-                } 
-               }; 
 
 
 
@@ -95,6 +93,10 @@ function build_interactive_plot(){
                 .attr("font-size", "20px");
 })
 
+
+
+
+    //BAR CHART
     d3.csv("data/bar-data.csv").then((data) => {
         const MAX_HEIGHT = d3.max(data, (d) => {return parseInt(d.amount); });
         console.log(MAX_HEIGHT);
@@ -106,6 +108,24 @@ function build_interactive_plot(){
                             .domain([0, MAX_HEIGHT + 1])
                             .range([0, VIS_HEIGHT]);
 
+
+
+        function handleHover(event, d){
+            event.target.style.fill = "yellow";
+            TOOLTIP.style("opacity", 1);
+            };
+
+        function handleLeave(event, d){
+            event.target.style.fill = "blueviolet";
+            TOOLTIP.style("opacity", 1);
+            };
+
+        function handleBarData (event, d) {
+            TOOLTIP.html("category: " + d.category + "<br/>amount: " + d.amount)
+            .style("left", event.pageX + 10 + "px")
+            .style("top", event.pageY - 50 + "px");
+            };
+
         FRAME2.selectAll("bars")
             .data(data)
             .enter()
@@ -114,29 +134,20 @@ function build_interactive_plot(){
                 .attr("height", d => VIS_HEIGHT - Y_SCALE2(d.amount))
                 .attr("x", (d) => {return 5 + MARGINS.left + X_SCALE2(d.category); })
                 .attr("y", (d) => {return MARGINS.bottom + Y_SCALE2(d.amount); })
-                .attr("class", "bar");
+                .attr("class", "bar")
+                .on("mouseover", handleHover)
+                .on("mouseleave", handleLeave)
+                .on("mousemove", handleBarData);
 
-        const TOOLTIP = d3.select("#tooltip")
-                        .append("div")
-                            .attr("class", "tooltip")
-                            .style("opacity", 0);
+        const TOOLTIP = d3.select("#vis2")
+            .append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
 
-        // function handleMouseover(event, d) {
-        //     TOOLTIP.style("opacity", 1);
-        // }
 
-        // function handleMousemove(event, d) {
-        //     // position the tooltip and fill in information 
-        //     TOOLTIP.html("Name: " + d.name + "<br>Value: " + d.x)
-        //         .style("left", (event.pageX + 10) + "px") //add offset
-        //                                                   // from mouse
-        //         .style("top", (event.pageY - 50) + "px"); 
-        // }
-        // function handleMouseleave(event, d) {
-        //     // on mouseleave, make transparant again 
-        //     TOOLTIP.style("opacity", 0); 
-        // }
+      
 
+        
         // FRAME2.selectAll(".point")
         //           .on("mouseover", handleMouseover) //add event listeners
         //           .on("mousemove", handleMousemove)
