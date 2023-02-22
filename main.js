@@ -12,6 +12,27 @@ const FRAME1 = d3
   .attr("class", "frame1");
 
 
+d3.csv("data/scatter-data.csv").then((data) => {
+    const MAX_X = d3.max(data, (d) => { return parseInt(d.x); });
+    const MAX_Y = d3.max(data, (d) => { return parseInt(d.y); });
+
+
+    const X_SCALE = d3.scaleLinear() 
+                      .domain([0, (MAX_X + 1)]) // add some padding  
+                      .range([0, VIS_WIDTH]);
+    const Y_SCALE = d3.scaleLinear()
+                        .domain([0, MAX_Y + 1])
+                        .range([0, VIS_HEIGHT]);
+    FRAME1.selectAll("points")
+        .data(data)
+        .enter()
+        .append("circle")
+            .attr("cx", (d) => {return (X_SCALE(d.x) + MARGINS.left); })
+            .attr("cy", (d) => {return (Y_SCALE(d.y) + MARGINS.bottom)})
+            .attr("r", 10)
+            .attr("class", "point");
+
+
 const FRAME2 = d3
   .select("#vis2")
   .append("svg")
@@ -19,41 +40,45 @@ const FRAME2 = d3
   .attr("width", FRAME_WIDTH)
   .attr("class", "frame2");
 
+d3.csv("data/bar-data.csv").then((data) => {
+    const MAX_X = d3.max
+})
+})
+
+
+
 function build_interactive_plot(){
 
     console.log("hah");
 
 
-    d3.csv("data/scatter-data.csv").then((data) => {
-        const MAX_X = d3.max(data, (d) => { return parseInt(d.x); });
-        const MAX_Y = d3.max(data, (d) => { return parseInt(d.y); });
-
-
-        const X_SCALE = d3.scaleLinear() 
-                          .domain([0, (MAX_X + 1)]) // add some padding  
-                          .range([0, VIS_WIDTH]);
-        const Y_SCALE = d3.scaleLinear()
-                            .domain([0, MAX_Y + 1])
-                            .range([0, VIS_HEIGHT]);
-        FRAME1.selectAll("points")
-            .data(data)
-            .enter()
-            .append("circle")
-                .attr("cx", (d) => {return (X_SCALE(d.x) + MARGINS.left); })
-                .attr("cy", (d) => {return (Y_SCALE(d.y) + MARGINS.bottom)})
-                .attr("r", 10)
-                .attr("class", "point");
+    
 
         const TOOLTIP = d3.select("#tooltip")
                         .append("div")
                             .attr("class", "tooltip")
                             .style("opacity", 0);
-    })
+
+        function handleMouseover(event, d) {
+            TOOLTIP.style("opacity", 1);
+        }
+
+        function handleMousemove(event, d) {
+            // position the tooltip and fill in information 
+            TOOLTIP.html("Name: " + d.name + "<br>Value: " + d.x)
+                .style("left", (event.pageX + 10) + "px") //add offset
+                                                          // from mouse
+                .style("top", (event.pageY - 50) + "px"); 
+        function handleMouseleave(event, d) {
+            // on mouseleave, make transparant again 
+            TOOLTIP.style("opacity", 0); 
+    } 
+    }
 }
 
 build_interactive_plot();
 
-/**
+
 
 function pointClicked(pointID) {
     console.log("point was clicked.");
@@ -93,7 +118,6 @@ function newPointSubmission() {
 
 
 
-*/
 
 
 
