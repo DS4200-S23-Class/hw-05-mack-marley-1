@@ -12,7 +12,21 @@ const FRAME1 = d3
   .attr("class", "frame1");
 
 
-d3.csv("data/scatter-data.csv").then((data) => {
+const FRAME2 = d3
+  .select("#vis2")
+  .append("svg")
+  .attr("height", FRAME_HEIGHT)
+  .attr("width", FRAME_WIDTH)
+  .attr("class", "frame2");
+
+
+
+
+
+
+function build_interactive_plot(){
+
+    d3.csv("data/scatter-data.csv").then((data) => {
     const MAX_X = d3.max(data, (d) => { return parseInt(d.x); });
     const MAX_Y = d3.max(data, (d) => { return parseInt(d.y); });
 
@@ -25,6 +39,27 @@ d3.csv("data/scatter-data.csv").then((data) => {
                         .range([0, VIS_HEIGHT]);
 
     let sourceNames = [];
+
+      function handleMouseover(event, d) { 
+            event.target.style.fill = "orange";    
+            }; 
+
+        function handleMouseleave(event, d) { 
+            event.target.style.fill = "darkred";   
+            }; 
+
+  
+
+        function handleClick(event, d) { 
+            if (event.target.style.stroke === "lightblue") { 
+                event.target.style.stroke = ""; 
+                } else { 
+                  event.target.style.stroke = "lightblue"; 
+                  event.target.style.strokeWidth = "3px"; 
+                } 
+               }; 
+
+
 
 
     // if(data.hasOwnProperty(data.category)){
@@ -41,7 +76,17 @@ d3.csv("data/scatter-data.csv").then((data) => {
             .attr("cx", (d) => {return (X_SCALE(d.x) + MARGINS.left); })
             .attr("cy", (d) => {return (Y_SCALE(d.y) + MARGINS.bottom)})
             .attr("r", 10)
-            .attr("class", "point");
+            .attr("class", "point")
+            .on("mouseover", handleMouseover) 
+            .on("mouseleave", handleMouseleave) 
+            .on("click", handleClick); 
+
+     const TOOLTIP = d3.select("#vis1") 
+            .append("div") 
+            .attr("class", "tooltip") 
+            .style("opacity", 0);  
+
+  
 
     FRAME1.append("g")
             .attr("transform", "translate(" + MARGINS.left + "," + (VIS_HEIGHT + MARGINS.top)
@@ -49,21 +94,6 @@ d3.csv("data/scatter-data.csv").then((data) => {
             .call(d3.axisBottom(X_SCALE).ticks(4))
                 .attr("font-size", "20px");
 })
-
-
-const FRAME2 = d3
-  .select("#vis2")
-  .append("svg")
-  .attr("height", FRAME_HEIGHT)
-  .attr("width", FRAME_WIDTH)
-  .attr("class", "frame2");
-
-
-
-
-
-
-function build_interactive_plot(){
 
     d3.csv("data/bar-data.csv").then((data) => {
         const MAX_HEIGHT = d3.max(data, (d) => {return parseInt(d.amount); });
