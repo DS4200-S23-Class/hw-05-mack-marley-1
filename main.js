@@ -4,6 +4,7 @@ const FRAME_WIDTH = 400;
 const MARGINS = {left: 30, right: 30, top: 30, bottom: 30};
 const VIS_HEIGHT = FRAME_HEIGHT - MARGINS.top - MARGINS.bottom;
 const VIS_WIDTH = FRAME_WIDTH - MARGINS.left - MARGINS.right;
+const circleScale = (coord) => coord * 40;
 
 const FRAME1 = d3
   .select("#vis1")
@@ -19,13 +20,32 @@ const FRAME2 = d3
   .attr("width", FRAME_WIDTH)
   .attr("class", "frame2");
 
+
+// mouse handlers for circles
+function handleMouseover(event, d) { 
+    event.target.style.fill = "orange";
+}; 
+
+function handleMouseleave(event, d) { 
+    event.target.style.fill = "darkred";   
+}; 
+
+function handleClick(event, d) { 
+    if (event.target.style.stroke === "lightblue") { 
+        event.target.style.stroke = "";}   
+    else { 
+        event.target.style.stroke = "lightblue"; 
+        event.target.style.strokeWidth = "3px"; 
+        } 
+    }; 
+
+
 //builds the plots
 function build_interactive_plot(){
 
-    //accesses scatter data from csv
+    //SCATTER W D3
     d3.csv("data/scatter-data.csv").then((data) => {
-    
-    //scales
+   
     const MAX_X = d3.max(data, (d) => { return parseInt(d.x); });
     const MAX_Y = d3.max(data, (d) => { return parseInt(d.y); });
 
@@ -39,61 +59,34 @@ function build_interactive_plot(){
 
     let sourceNames = [];
 
-
-    function handleMouseover(event, d) { 
-        event.target.style.fill = "orange";    
-        }; 
-
-    function handleMouseleave(event, d) { 
-        event.target.style.fill = "darkred";   
-        }; 
-
-    function handleClick(event, d) { 
-        if (event.target.style.stroke === "lightblue") { 
-            event.target.style.stroke = "";}   
-        else { 
-            event.target.style.stroke = "lightblue"; 
-            event.target.style.strokeWidth = "3px"; 
-            } 
-            }; 
+    const TOOLTIP = d3.select("#vis1") 
+            .append("div") 
+            .attr("class", "tooltip") 
+            .style("opacity", 0);  
 
 
-
-
-    // if(data.hasOwnProperty(data.category)){
-    //     sourceNames.push(data.category);
-    //     sourceCount.push(parseInt(data[data.category]));
-    // }
-
-    // X_SCALE.domain(sourceNames)
-
+   
     FRAME1.selectAll("points")
         .data(data)
         .enter()
         .append("circle")
-            .attr("cx", (d) => {return (X_SCALE(d.x) + MARGINS.left); })
-            .attr("cy", (d) => {return (Y_SCALE(d.y) + MARGINS.bottom)})
+            .attr("cx", (d) => circleScale(d.x) + MARGINS.left)
+            .attr("cy", (d) => 400 - circleScale(d.y) - MARGINS.top)
             .attr("r", 10)
             .attr("class", "point")
             .on("mouseover", handleMouseover) 
             .on("mouseleave", handleMouseleave) 
             .on("click", handleClick); 
 
-     const TOOLTIP = d3.select("#vis1") 
-            .append("div") 
-            .attr("class", "tooltip") 
-            .style("opacity", 0);  
-
-  
-
+     
     FRAME1.append("g")
             .attr("transform", "translate(" + MARGINS.left + "," + (VIS_HEIGHT + MARGINS.top)
                 + ")")
             .call(d3.axisBottom(X_SCALE).ticks(4))
                 .attr("font-size", "20px");
-})
+    })
 
-
+   
 
 
     //BAR CHART
@@ -107,6 +100,11 @@ function build_interactive_plot(){
         const Y_SCALE2 = d3.scaleLinear()
                             .domain([0, MAX_HEIGHT + 1])
                             .range([0, VIS_HEIGHT]);
+
+        const TOOLTIP = d3.select("#vis2")
+            .append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
 
 
 
@@ -139,19 +137,6 @@ function build_interactive_plot(){
                 .on("mouseleave", handleLeave)
                 .on("mousemove", handleBarData);
 
-        const TOOLTIP = d3.select("#vis2")
-            .append("div")
-            .attr("class", "tooltip")
-            .style("opacity", 0);
-
-
-      
-
-        
-        // FRAME2.selectAll(".point")
-        //           .on("mouseover", handleMouseover) //add event listeners
-        //           .on("mousemove", handleMousemove)
-        //           .on("mouseleave", handleMouseleave);  
 
         FRAME2.append("g") 
             .attr("transform", "translate(" + MARGINS.left + 
@@ -171,42 +156,28 @@ function build_interactive_plot(){
 build_interactive_plot();
 
 
-
-// function pointClicked(pointID) {
-//     console.log("point was clicked.");
+function newPointSubmission() {
+    const x = document.getElementById("select-x-coord").value;
+    const y = document.getElementById("select-y-coord").value;
+    
+    let newText = "point added: (" + x + ", " + y + ")";
+    let buttonDiv = document.getElementById("last-point-clicked");
+    buttonDiv.innerHTML = newText;
 
     
-//     let rightCol = document.getElementById("last-point-clicked");
-//     rightCol.innerHTML = "Last point clicked: " + pointID;
+    console.log(x, y);
+    // add
+    FRAME1.append("circle")
+        .attr("cx", (d) => circleScale(x) + MARGINS.left)
+        .attr("cy", (d) => 400 - circleScale(y) - MARGINS.top)
+        .attr("r", 10)
+        .attr("fill", "black")
+        .on("mouseover", handleMouseover)
+        .on("mouseleave", handleMouseleave)
+        .on("click", handleClick);
+}
 
 
-//     let clickedDiv = document.getElementById(pointID);
-//     clickedDiv.classList.toggle("clicked"); 
-
-// }
-
-
-
-// function pointHovered(point) {
-//     let currPoint = document.getElementById(point);
-//     currPoint.classList.toggle("hovered");
-// }
-
-// function newPointSubmission() {
-//     console.log('something');
-//     let xVal = document.getElementById("select-x-coord").value;
-//     let yVal = document.getElementById("select-y-coord").value;
-//     let pointID = "'(" + xVal + ", " + yVal + ")'"
-//     console.log(pointID);
-//     xVal = Number(xVal) * 40;
-//     yVal = 400 - Number(yVal) * 40;
-//     let scatterplot = document.getElementById("scatterplot");
-//     scatterplot.innerHTML += "<circle id=" + pointID +
-//         " class='point' cx=" + xVal + " cy=" + yVal + 
-//         ` r='10' onclick="pointClicked(` + pointID + 
-//         `)" onmouseover="pointHovered(` + pointID + 
-//         `)" onmouseout="pointHovered(` + pointID + ')" />';   
-// }
 
 
 
