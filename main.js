@@ -117,7 +117,7 @@ function build_interactive_plot(){
 
         function handleLeave(event, d){
             event.target.style.fill = "blueviolet";
-            TOOLTIP.style("opacity", 1);
+            TOOLTIP.style("opacity", 0);
             };
 
         function handleBarData (event, d) {
@@ -133,7 +133,7 @@ function build_interactive_plot(){
                 .attr("width", 10 + MARGINS.left)
                 .attr("height", (d) => {return Y_SCALE2(d.amount); })
                 .attr("x", (d) => {return 5 + MARGINS.left + X_SCALE2(d.category); })
-                .attr("y", (d) => {return VIS_HEIGHT - Y_SCALE2(d.category); })
+                .attr("y", (d) => {return Y_SCALE2(d.amount); })
                 .attr("class", "bar")
                 .on("mouseover", handleHover)
                 .on("mouseleave", handleLeave)
