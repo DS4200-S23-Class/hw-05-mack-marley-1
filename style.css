@@ -3,6 +3,11 @@ body {
 	width: 100%;
 }
 
+.bar {
+	fill: blueviolet;
+	stroke: black;
+}
+
 .centered {
 	text-align: center;
 }
@@ -16,11 +21,6 @@ body {
 .flex-column {
 	display: flex;
 	flex-direction: column;
-}
-
-.border {
-	stroke: black;
-	stroke-width: 10;
 }
 
 #left-column {
@@ -53,9 +53,4 @@ circle {
   border-width: 2px;
   border-radius: 5px;
   padding: 5px;
-}
-
-.frame1, .frame2 {
-  border-left: 3px solid black;
-  border-bottom: 3px solid black;
 }
