@@ -4,7 +4,7 @@ const FRAME_WIDTH = 400;
 const MARGINS = {left: 30, right: 30, top: 30, bottom: 30};
 const VIS_HEIGHT = FRAME_HEIGHT - MARGINS.top - MARGINS.bottom;
 const VIS_WIDTH = FRAME_WIDTH - MARGINS.left - MARGINS.right;
-const circleScale = (coord) => coord * 40;
+const circleScale = (coord) => coord * 34;
 
 const FRAME1 = d3
   .select("#vis1")
@@ -54,7 +54,7 @@ function build_interactive_plot(){
                       .domain([0, (MAX_X + 1)]) // add some padding  
                       .range([0, VIS_WIDTH]);
     const Y_SCALE = d3.scaleLinear()
-                        .domain([0, MAX_Y + 1])
+                        .domain([MAX_Y + 1, 0])
                         .range([0, VIS_HEIGHT]);
 
     let sourceNames = [];
@@ -82,8 +82,12 @@ function build_interactive_plot(){
     FRAME1.append("g")
             .attr("transform", "translate(" + MARGINS.left + "," + (VIS_HEIGHT + MARGINS.top)
                 + ")")
-            .call(d3.axisBottom(X_SCALE).ticks(4))
-                .attr("font-size", "20px");
+            .call(d3.axisBottom(X_SCALE))
+                .attr("font-size", "10px");
+    FRAME1.append("g") 
+          .attr("transform", "translate(" + MARGINS.left + "," + MARGINS.top + ")") 
+          .call(d3.axisLeft(Y_SCALE))
+          .attr("font-size", "10px");
     })
 
    
@@ -98,8 +102,10 @@ function build_interactive_plot(){
                             .domain(data.map(d => d.category))
                             .range([0, VIS_WIDTH]);
         const Y_SCALE2 = d3.scaleLinear()
-                            .domain([0, MAX_HEIGHT + 1])
-                            .range([0, VIS_HEIGHT]);
+                .range([VIS_HEIGHT, MARGINS.top]);
+
+        Y_SCALE2.domain([0, d3.max(data, function(d) { return +d.amount; })+1]);
+
 
         const TOOLTIP = d3.select("#vis2")
             .append("div")
@@ -129,9 +135,9 @@ function build_interactive_plot(){
             .enter()
             .append("rect")
                 .attr("width", 10 + MARGINS.left)
-                .attr("height", (d) => {return Y_SCALE2(d.amount); })
+                .attr("height", (d) => {return VIS_HEIGHT - Y_SCALE2(d.amount); })
                 .attr("x", (d) => {return 5 + MARGINS.left + X_SCALE2(d.category); })
-                .attr("y", (d) => {return Y_SCALE2(d.amount); })
+                .attr("y", (d) => {return Y_SCALE2(d.amount) + 30; })
                 .attr("class", "bar")
                 .on("mouseover", handleHover)
                 .on("mouseleave", handleLeave)
@@ -141,14 +147,13 @@ function build_interactive_plot(){
         FRAME2.append("g") 
             .attr("transform", "translate(" + MARGINS.left + 
                 "," + (VIS_HEIGHT + MARGINS.top) + ")") 
-            .call(d3.axisBottom(X_SCALE2).ticks(4)) 
-                .attr("font-size", '20px');
+            .call(d3.axisBottom(X_SCALE2)) 
+            .attr("font-size", '10px');
 
         FRAME2.append("g") 
-            .attr("transform", "translate(" + MARGINS.bottom + 
-                "," + (VIS_WIDTH + MARGINS.top) + ")") 
-            .call(d3.axisLeft(Y_SCALE2).ticks(4)) 
-                .attr("font-size", '20px');
+          .attr("transform", "translate(" + MARGINS.left + "," + MARGINS.top + ")") 
+          .call(d3.axisLeft(Y_SCALE2))
+          .attr("font-size", "10px");
 
     })
 }
@@ -176,7 +181,6 @@ function newPointSubmission() {
         .on("mouseleave", handleMouseleave)
         .on("click", handleClick);
 }
-
 
 
 
